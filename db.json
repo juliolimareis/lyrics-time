@@ -1,0 +1,48 @@
+{
+  "lyrics": [
+    { 
+      "id": "1",
+      "title": "21 Guns",
+      "artist": "Green Day",
+      "steps": [
+        {
+          "id": 2,
+          "html": "Do you know what's worth fighting for<br>When it's not worth dying for?<br>Does it take your breath away<br>And you feel yourself suffocating?",
+          "time": 25
+        },
+        {
+          "id": 3,
+          "html": "Does the pain weigh out the pride<br>And you look for a place to hide?<br>Did someone break your heart inside?<br>You're in ruins",
+          "time": 22
+        },
+        {
+          "id": 4,
+          "html": "1, 21 guns<br>Lay down your arms and give up the fight<br>1, 21 guns<br>Throw up your arms into the sky<br>You and I",
+          "time": 30
+        }
+      ]
+    },
+    { 
+      "id": "2",
+      "title": " Wherever You Will Go ",
+      "artist": "The Calling",
+      "steps": [
+        {
+          "id": 2,
+          "html": "So lately, been wondering<br>Who will be there to take my place?<br>When I'm gone, you'll need love<br>To light the shadows on your face",
+          "time": 19
+        },
+        {
+          "id": 3,
+          "html": "If a great wave shall fall<br>And fall upon us all<br>Then between the sand and stone<br>Could you make it on your own?",
+          "time": 17
+        },
+        {
+          "id": 4,
+          "html": "If I could, then I would<br>I'll go wherever you will go<br>Way up high or down low<br>I'll go wherever you will go",
+          "time": 18
+        }
+      ]
+    }
+  ]
+}

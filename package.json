@@ -5,13 +5,35 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
+    "db": "bun json-server db.json -p 3045",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "axios": "^1.6.8",
     "nuxt": "^3.11.2",
     "vue": "^3.4.27",
     "vue-router": "^4.3.2"
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.21.8",
+    "@eslint/js": "^9.3.0",
+    "@nuxtjs/eslint-config-typescript": "^12.0.0",
+    "@nuxtjs/tailwindcss": "^6.12.0",
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/forms": "^0.5.7",
+    "@tailwindcss/typography": "^0.5.13",
+    "@typescript-eslint/eslint-plugin": "^7.9.0",
+    "@typescript-eslint/parser": "^7.9.0",
+    "eslint": "9.x",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-loader": "^4.0.2",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-vue": "^9.26.0",
+    "globals": "^15.2.0",
+    "json-server": "^1.0.0-beta.0",
+    "typescript-eslint": "^7.9.0",
+    "vue-eslint-parser": "^9.3.0"
   }
 }
