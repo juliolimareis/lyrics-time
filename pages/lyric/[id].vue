@@ -43,10 +43,11 @@
               </svg>
             </button>
           </div>
-  
+          
+          <!-- PREVIOUS -->
           <div class="ml-3 flex items-baseline justify-between">
             <div class="mr-3">
-              <svg class="w-5 h-5 fill-green-500" role="button" @click="change('previous')" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve">
+              <svg :class="['w-5 h-5', findNextStep('previous') ? 'fill-green-500 cursor-pointer' : 'fill-gray-400']" @click="change('previous')" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve">
                 <g>
                   <g>
                     <path d="M490.861,2.971c-6.485-3.84-14.507-3.968-21.141-0.32L53.336,231.664V21.338c0-11.776-9.557-21.333-21.333-21.333
@@ -56,11 +57,11 @@
                   </g>
                 </g>
               </svg>
-  
             </div>
-  
+
+            <!-- NEXT -->
             <div>
-              <svg class="w-5 h-5 fill-green-500" role="button" @click="change('next')" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve">
+              <svg :class="['w-5 h-5', findNextStep('next') ? 'fill-green-500 cursor-pointer' : 'fill-gray-400']" @click="change('next')" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve">
                 <g>
                   <g>
                     <path d="M480,0c-11.776,0-21.333,9.557-21.333,21.333v210.325L42.283,2.645c-6.613-3.627-14.656-3.52-21.141,0.32

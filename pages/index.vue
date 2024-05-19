@@ -1,28 +1,42 @@
 <template>
   <div class="text-center bg-black text-white w-screen h-screen">
-    <template v-if="lyrics.length">
-      <NuxtLink class="w-fit m-auto" v-for="lyric in lyrics" :key="lyric.id" :to="'/lyric/' + lyric.id">
-        <p class="mb-5 text-xl font-bold text-center p-2 border-2 border-gray-200 rounded-md">
-          {{ lyric.title }} - <span class="font-normal">{{ lyric.artist }}</span>
-        </p>
+    <div class="fixed ml-2 grid grid-rows-3">
+      <NuxtLink to="/edit" title="Add step" class="w-fit mt-2 ml-[-1px] text-white focus:outline-none focus:ring-2 focus:ring-opacity-75">
+        <PlusIcon class="w-5 h-5 text-green-500"/>
       </NuxtLink>
-    </template>
+    </div>
 
-    <template v-else>
-      <p class="text-center">Carregando letras...</p>
-    </template>
+    <div class="max-w-sm mx-auto">
+      <template v-if="lyrics.length">
+        <NuxtLink class="w-full m-auto grid grid-cols-12 mb-5 border-[1px] p-2 rounded-md border-gray-200" v-for="lyric in lyrics" :key="lyric.id" :to="'/lyric/' + lyric.id">
+          <p class="col-span-11 text-xl font-bold text-center">
+            {{ lyric.title }} - <span class="font-normal">{{ lyric.artist }}</span>
+          </p>
+
+          <NuxtLink :to="'/edit?lyric=' + lyric.id" title="Edit" class="col-span-1 text-white focus:outline-none focus:ring-2 focus:ring-opacity-75">
+            <PencilSquareIcon class="w-4 h-4 text-green-500"/>
+          </NuxtLink>
+        </NuxtLink>
+      </template>
+  
+      <template v-else>
+        <p class="text-center">Carregando letras...</p>
+      </template>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-  const api = useLyric();
+import { PlusIcon, PencilSquareIcon, } from "@heroicons/vue/24/outline";
 
-  const lyrics = ref<Lyric[]>([]);
+const api = useLyric();
 
-  onMounted(() => {
-    api.fetchAll()
-      .then(res => {
-        lyrics.value = res.data;
-      });
-  });
+const lyrics = ref<Lyric[]>([]);
+
+onMounted(() => {
+  api.fetchAll()
+    .then(res => {
+      lyrics.value = res.data;
+    });
+});
 </script>

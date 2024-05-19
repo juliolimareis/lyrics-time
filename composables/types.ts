@@ -1,5 +1,5 @@
 export interface Lyric {
-  id: string;
+  id?: string;
   title: string;
   artist: string;
   steps: Step[];

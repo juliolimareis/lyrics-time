@@ -1,6 +1,6 @@
 {
   "lyrics": [
-    { 
+    {
       "id": "1",
       "title": "21 Guns",
       "artist": "Green Day",
@@ -19,12 +19,47 @@
           "id": 4,
           "html": "1, 21 guns<br>Lay down your arms and give up the fight<br>1, 21 guns<br>Throw up your arms into the sky<br>You and I",
           "time": 30
+        },
+        {
+          "id": 5,
+          "html": "When you're at the end of the road<br>And you lost all sense of control<br>And your thoughts have taken their toll<br>When your mind breaks the spirit of your soul",
+          "time": 30
+        },
+        {
+          "id": 6,
+          "html": "Your faith walks on broken glass<br>And the hangover doesn't pass<br>Nothing's ever built to last<br>You're in ruins",
+          "time": 30
+        },
+        {
+          "id": 7,
+          "html": "1, 21 guns<br>Lay down your arms and give up the fight<br>1, 21 guns<br>Throw up your arms into the sky<br>You and I",
+          "time": 30
+        },
+        {
+          "id": 8,
+          "html": "Did you try to live on your own<br>When you burned down the house and home?<br>Did you stand too close to the fire<br>Like a liar looking for forgiveness from a stone?",
+          "time": 30
+        },
+        {
+          "id": 9,
+          "html": "When it's time to live and let die<br>And you can't get another try<br>Something inside this heart has died<br>You're in ruins",
+          "time": 30
+        },
+        {
+          "id": 10,
+          "html": "1, 21 guns<br>Lay down your arms and give up the fight<br>1, 21 guns<br>Throw up your arms into the sky",
+          "time": 30
+        },
+        {
+          "id": 11,
+          "html": "1, 21 guns<br>Lay down your arms and give up the fight<br>1, 21 guns<br>Throw up your arms into the sky<br>You and I",
+          "time": 30
         }
       ]
     },
-    { 
+    {
       "id": "2",
-      "title": " Wherever You Will Go ",
+      "title": "Wherever You Will Go ",
       "artist": "The Calling",
       "steps": [
         {
@@ -41,6 +76,29 @@
           "id": 4,
           "html": "If I could, then I would<br>I'll go wherever you will go<br>Way up high or down low<br>I'll go wherever you will go",
           "time": 18
+        },
+        {
+          "id": 4,
+          "html": "test",
+          "time": 20
+        }
+      ]
+    },
+    {
+      "id": "e11c",
+      "title": "Brave Heart",
+      "artist": "Digimon",
+      "steps": []
+    },
+    {
+      "id": "9dd7",
+      "title": "Nova Era",
+      "artist": "Angra",
+      "steps": [
+        {
+          "id": 1,
+          "html": "Somehow I know\nThat things are gonna change\nNew boundaries on the way\nLike never were before",
+          "time": 20
         }
       ]
     }

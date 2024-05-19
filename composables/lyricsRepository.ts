@@ -20,8 +20,8 @@ export const useLyric = () => {
     return api.post<Lyric>("/lyrics", lyric);
   }
 
-  function update(id: number | string, Lyric: Lyric){
-    return api.put(`/lyrics/${id}`, Lyric);
+  function update(id: number | string, lyric: Lyric){
+    return api.put(`/lyrics/${id}`, lyric);
   }
 
   return { dispatch, fetch, fetchAll, search, update, };
