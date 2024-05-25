@@ -6,7 +6,7 @@
     :text="context.$snackbarInfo?.value.text"
   />
 
-  <main v-if="isLoading" class="relative isolate min-h-full text-green-500 bg-black">
+  <main v-if="isLoading" class="relative isolate min-h-full text-green-500 bg-black w-screen h-screen">
     <div class="mx-auto max-w-7xl px-6 py-32 text-center sm:py-40 lg:px-8">
       <!-- <img class="h-36 m-auto md:h-36" :src="Logo" alt="GM Logo"> -->
       
@@ -28,7 +28,7 @@
     </div>
   </main>
 
-  <div v-else>
+  <div class="text-green-500 bg-black w-screen h-screen"v-else>
     <NuxtPage />
   </div>
 </template>
