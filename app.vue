@@ -43,7 +43,7 @@ const router = useRouter();
 const context = useNuxtApp();
 const isLoading = ref(true);
 
-useHead({ title: "Carregando ..." });
+useHead({ title: "Loading ..." });
 
 onMounted(() => {
   context.$fetchLogin()

@@ -1,12 +1,12 @@
 <template>
-  <div class="fixed p-2 grid grid-cols-12">
-    <div class="col-span-11">
+  <div class="flex justify-between w-screen p-2">
+    <div class="-col-span-11">
       <NuxtLink to="/edit" title="Add step" class="w-fit text-white focus:outline-none focus:ring-2 focus:ring-opacity-75">
         <PlusIcon class="w-7 h-7 text-green-500"/>
       </NuxtLink>
     </div>
 
-    <div class="col-span-1">
+    <div class="-justify-end">
       <NuxtLink to="/" @click="$logout" title="logout" class="w-fit float-right text-white focus:outline-none focus:ring-2 focus:ring-opacity-75">
         <ArrowRightEndOnRectangleIcon class="w-7 h-7 text-green-500"/>
       </NuxtLink>
@@ -14,7 +14,7 @@
 
   </div>
 
-  <div class="text-center bg-black text-white w-screen h-screen p-5 pt-14">
+  <div class="text-center bg-black text-white w-screen h-screen p-5 pt-3">
     <div v-if="isLoading">
       <Loader class="m-auto" size="md" />
     </div>
@@ -42,8 +42,11 @@
 </template>
 
 <script lang="ts" setup>
+import { useHead } from "#app";
 import { PlusIcon, PencilSquareIcon, ArrowRightEndOnRectangleIcon} from "@heroicons/vue/24/outline";
 import { Firebase } from "~/composables/Firebase"
+
+useHead({ title: "Lyrics" });
 
 const context = useNuxtApp();
 const isLoading = ref(false);

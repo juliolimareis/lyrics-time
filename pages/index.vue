@@ -1,12 +1,12 @@
 <template>
   <div class="flex w-screen h-screen flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8 bg-black">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
-      <img class="h-36 mx-auto md:h-36" :src="Logo" alt="logo">
+      <img class="h-32 mx-auto md:h-36" :src="Logo" alt="logo">
       <h2 class="text-green-500 mt-6 text-center text-2xl font-bold leading-9 tracking-tight">Lyrics Time</h2>
     </div>
 
     <div class="sm:mx-auto sm:w-full sm:max-w-[480px]">
-      <div class=" px-6 -py-12 -shadow sm:rounded-lg sm:px-12">
+      <div class="px-6 py-8 -shadow sm:rounded-lg sm:px-12">
         <from class="space-y-6" @submit.prevent="onLogin">
           <div>
             <label for="email" class="block text-sm font-medium leading-6 text-green-500">E-mail</label>
@@ -112,7 +112,7 @@
 import Logo from "~/assets/images/logo.png";
 
 useHead({
-  title: "Lyrics Time - Login"
+  title: "Login - Lyrics Time"
 });
 
 const { $user, $onLogin } = useNuxtApp();

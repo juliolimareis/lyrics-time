@@ -97,6 +97,8 @@
 <script lang="ts" setup>
 import { PencilSquareIcon, } from "@heroicons/vue/24/outline";
 
+useHead({ title: "Playing" });
+
 const router = useRouter()
 const route = useRoute();
 const context = useNuxtApp();
@@ -199,6 +201,7 @@ onMounted(() => {
 
   if(findLyric) {
     lyric.value = findLyric;
+    useHead({ title: "Playing - " + lyric.value.title });
 
     if(currentPart.value){
       const findStep = lyric?.value?.steps.find(s => s.id === currentPart.value);

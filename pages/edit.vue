@@ -1,5 +1,5 @@
 <template>
-  <div v-if="notFound">
+  <div v-if="notFound" class="bg-black w-screen text-green-500">
     <p class="text-green-500 text-2xl text-center mt-3">
       Music not found
       <br>
@@ -13,19 +13,19 @@
     <div class="fixed">
       <div class="flex justify-center gap-10 w-screen bg-black opacity-90">
         <NuxtLink to="/lyrics" title="go to home" class="w-fit text-center -col-span-3">
-          <svg class="w-5 h-5 fill-green-500" role="button" viewBox="0 0 24 24" aria-hidden="true" tabindex="-1"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
+          <svg class="w-7 h-7 fill-green-500" role="button" viewBox="0 0 24 24" aria-hidden="true" tabindex="-1"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
         </NuxtLink>
   
         <button @click="onSave" title="Salve" class="-col-span-3 w-fit text-white focus:outline-none focus:ring-2 focus:ring-opacity-75">
-          <CheckIcon class="w-5 h-5 text-green-500"/>
+          <CheckIcon class="w-7 h-7 text-green-500"/>
         </button>
   
         <button @click="add" title="Add step" class="-col-span-3 w-fit text-white focus:outline-none focus:ring-2 focus:ring-opacity-75">
-          <PlusIcon class="w-5 h-5 text-green-500"/>
+          <PlusIcon class="w-7 h-7 text-green-500"/>
         </button>
         
         <NuxtLink v-if="lyricId" :to="'/lyric/' + lyricId" title="test lyric" class="-col-span-3 w-fit text-white focus:outline-none focus:ring-2 focus:ring-opacity-75">
-          <PlayCircleIcon class="w-5 h-5 text-green-500"/>
+          <PlayCircleIcon class="w-7 h-7 text-green-500"/>
         </NuxtLink>
       </div>
     </div>
@@ -104,7 +104,8 @@
 <script lang="ts" setup>
 import { PlusIcon, TrashIcon, CheckIcon, PlayCircleIcon, } from "@heroicons/vue/24/outline";
 
-const router = useRouter();
+useHead({ title: "Edit" });
+
 const route = useRoute();
 
 const context = useNuxtApp();
@@ -157,6 +158,8 @@ onMounted(() => {
     
     if(findLyric){
       lyric.value = findLyric;
+      useHead({ title: "Edit - " + lyric.value.title });
+
     }else{
       notFound.value = true;
     }
