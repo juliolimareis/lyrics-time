@@ -97,7 +97,7 @@
       "steps": [
         {
           "id": 1,
-          "html": "Somehow I know\nThat things are gonna change\nNew boundaries on the way\nLike never were before",
+          "html": "Somehow I know <br>\nThat things are gonna change<br>\nNew boundaries on the way<br>\nLike never were before<br>",
           "time": 20
         }
       ]

@@ -1,24 +1,36 @@
 <template>
-  <div class="bg-black pt-2">
-    <div class="fixed ml-2 grid grid-rows-4">
-      <NuxtLink to="/" title="go to home" class="text-center">
-        <svg class="w-5 h-5 fill-green-500" role="button" viewBox="0 0 24 24" aria-hidden="true" tabindex="-1"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
+  <div v-if="notFound">
+    <p class="text-green-500 text-2xl text-center mt-3">
+      Music not found
+      <br>
+      <NuxtLink to="/lyrics" title="go to home" class="text-center underline">
+        Go home
       </NuxtLink>
+    </p>
+  </div>
 
-      <button @click="onSubmit" title="Salve" class="w-fit mt-1 ml-[-1px] text-white focus:outline-none focus:ring-2 focus:ring-opacity-75">
-        <CheckIcon class="w-5 h-5 text-green-500"/>
-      </button>
-
-      <button @click="add" title="Add step" class="w-fit mt-2 ml-[-1px] text-white focus:outline-none focus:ring-2 focus:ring-opacity-75">
-        <PlusIcon class="w-5 h-5 text-green-500"/>
-      </button>
-      
-      <NuxtLink v-if="lyricId" :to="'/lyric/' + lyricId" title="Add step" class="w-fit mt-2 ml-[-1px] text-white focus:outline-none focus:ring-2 focus:ring-opacity-75">
-        <PlayCircleIcon class="w-5 h-5 text-green-500"/>
-      </NuxtLink>
+  <div v-else class="bg-black p-3">
+    <div class="fixed">
+      <div class="flex justify-center gap-10 w-screen bg-black opacity-90">
+        <NuxtLink to="/lyrics" title="go to home" class="w-fit text-center -col-span-3">
+          <svg class="w-5 h-5 fill-green-500" role="button" viewBox="0 0 24 24" aria-hidden="true" tabindex="-1"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
+        </NuxtLink>
+  
+        <button @click="onSave" title="Salve" class="-col-span-3 w-fit text-white focus:outline-none focus:ring-2 focus:ring-opacity-75">
+          <CheckIcon class="w-5 h-5 text-green-500"/>
+        </button>
+  
+        <button @click="add" title="Add step" class="-col-span-3 w-fit text-white focus:outline-none focus:ring-2 focus:ring-opacity-75">
+          <PlusIcon class="w-5 h-5 text-green-500"/>
+        </button>
+        
+        <NuxtLink v-if="lyricId" :to="'/lyric/' + lyricId" title="test lyric" class="-col-span-3 w-fit text-white focus:outline-none focus:ring-2 focus:ring-opacity-75">
+          <PlayCircleIcon class="w-5 h-5 text-green-500"/>
+        </NuxtLink>
+      </div>
     </div>
 
-    <div class="max-w-sm mx-auto mt-3 bg-black">
+    <div class="max-w-sm mx-auto mt-8 bg-black">
       <div class="mb-5">
         <label
           for="base-input"
@@ -82,7 +94,7 @@
             v-model="setup.html" placeholder="lyrics HTML here..."
             rows="5"
           />
-          <div class="bg-black text-white border-[1px] p-1 text-center mt-2 rounded border-gray-400 min-h-10" v-html="setup.html" />
+          <div class="p-2 bg-black text-justify text-white border-[1px] mt-2 rounded border-gray-400 min-h-10" v-html="setup.html" />
         </div>
       </template>
     </div>
@@ -95,9 +107,11 @@ import { PlusIcon, TrashIcon, CheckIcon, PlayCircleIcon, } from "@heroicons/vue/
 const router = useRouter();
 const route = useRoute();
 
-let lyricId = route?.query?.lyric as string;
-
+const context = useNuxtApp();
+const lyricId = ref<string>();
 const api = useLyric();
+const notFound = ref(false);
+const firebase = new Firebase();
 const lyric = ref<Lyric>({
   title: "",
   artist: "",
@@ -120,31 +134,34 @@ function remove(index: number){
   lyric.value.steps.splice(index, 1);  
 }
 
-function onSubmit(){
-  if(lyricId){
-    api.update(lyricId, lyric.value)
-      .then(res => {
-        console.log(res.data);
-      });
+async function onSave(){
+  if(lyricId.value){
+    await firebase.setLyric(lyric.value);
+    const index = context.$lyrics.value.findIndex(l => l.id === lyric.value.id);
+
+    if(index !== -1){
+      context.$lyrics.value.splice(index, 1);
+    }
   }else{
-    api.dispatch(lyric.value)
-      .then(res => {
-        lyricId = String(res.data.id);
-        router.push({ query: { lyric: lyricId } })
-        console.log(res.data);
-      });
+    await firebase.addLyric(lyric.value);
   }
+
+  context.$lyrics.value.push(lyric.value);
 }
 
 onMounted(() => {
-  if(lyricId){
-    api.fetch(lyricId)
-      .then(res => {
-        lyric.value = res.data;
-      });
+  lyricId.value = route?.query?.lyric as string;
+
+  if(lyricId.value){
+    const findLyric = context.$lyrics.value.find(lyric => lyric.id === lyricId.value)
+    
+    if(findLyric){
+      lyric.value = findLyric;
+    }else{
+      notFound.value = true;
+    }
   }
 });
-
 </script>
 
 <style>

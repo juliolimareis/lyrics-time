@@ -1,15 +1,21 @@
 <template>
   <div class="text-center bg-black text-white w-screen h-screen">
+    <div v-if="lyric" class="fixed ml-2 grid grid-rows-4">
+      <NuxtLink to="/lyrics" class="col-span-1 text-center pt-6 mb-2">
+        <svg class="w-6 h-6 fill-green-500" role="button" viewBox="0 0 24 24" aria-hidden="true" tabindex="-1"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
+      </NuxtLink>
+
+      <NuxtLink :to="'/edit?lyric=' + lyric.id" title="Edit" class="col-span-1 text-white focus:outline-none focus:ring-2 focus:ring-opacity-75">
+        <PencilSquareIcon class="w-6 h-6 text-green-500"/>
+      </NuxtLink>
+    </div>
+
     <template v-if="lyric">
       <Transition :duration="100" appear>
         <div class="w-full h-1 bg-green-500 rounded-full" :style="{ width: `${sizeBar}%`, transition: '0.8s' }"/>
       </Transition>
   
       <div class="grid grid-cols-12 w-fit m-auto mt-2 px-3">
-        <NuxtLink to="/" class="col-span-1 text-center pt-6">
-          <svg class="w-9 h-9 fill-green-500" role="button" viewBox="0 0 24 24" aria-hidden="true" tabindex="-1"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
-        </NuxtLink>
-
         <p class="col-span-7 mb-5 text-xl font-bold mt-3 text-center">
           {{ lyric.title }} 
           <br>
@@ -88,123 +94,128 @@
 
 </template>
 
-
 <script lang="ts" setup>
-  const router = useRouter()
-  const route = useRoute();
-  const api = useLyric();
+import { PencilSquareIcon, } from "@heroicons/vue/24/outline";
 
-  const currentStep = ref<Step>();
-  const currentPart = ref<number>(0);
-  const sizeBar = ref(0);
-  const player = ref<"play" | "pause">("pause");
-  const timeCount = ref(0);
-  const lyric = ref<Lyric>();
+const router = useRouter()
+const route = useRoute();
+const context = useNuxtApp();
 
-  function pause(){
-    player.value = "pause";
-  }
+const currentStep = ref<Step>();
+const currentPart = ref<number>(0);
+const sizeBar = ref(0);
+const player = ref<"play" | "pause">("pause");
+const timeCount = ref(0);
+const notFound = ref(false);
+const lyric = ref<Lyric>();
 
-  function stop(){
-    player.value = "pause";
-    timeCount.value = 0;
-    sizeBar.value = 0;
-  }
+function pause(){
+  player.value = "pause";
+}
 
-  function play(){
-    player.value = "play";
-  }
+function stop(){
+  player.value = "pause";
+  timeCount.value = 0;
+  sizeBar.value = 0;
+}
 
-  function keydown(e: any){
-    if (e.code === 'Space') {
-      if(player.value === "pause"){
-        start();
-      }else{
-        pause();
-      }
-    }else if (e.code === 'ArrowLeft') {
-      change("previous");
-    }else if (e.code === 'ArrowRight') {
-      change("next");
-    }
-  }
+function play(){
+  player.value = "play";
+}
 
-  function change(action: "next" | "previous"){
-    stop();
-    const nextStep = findNextStep(action);
-
-    if(nextStep){
-      currentStep.value = nextStep;
-      router.push({ query: { part: currentStep.value?.id } })
-    }
-  }
-
-  function findNextStep(action: "next" | "previous"){
-    let findIndex = lyric.value.steps.findIndex(s => s.id === currentStep.value.id);
-    const actionSum = action === "next" ? 1 : -1;
-    const changedStep = lyric.value.steps[findIndex + actionSum];
-
-    if(findIndex !== -1 && changedStep){
-      return changedStep;
+function keydown(e: any){
+  if (e.code === 'Space') {
+    if(player.value === "pause"){
+      start();
     }else{
-      return undefined;
+      pause();
+    }
+  }else if (e.code === 'ArrowLeft') {
+    change("previous");
+  }else if (e.code === 'ArrowRight') {
+    change("next");
+  }
+}
+
+function change(action: "next" | "previous"){
+  stop();
+  const nextStep = findNextStep(action);
+
+  if(nextStep){
+    currentStep.value = nextStep;
+    router.push({ query: { part: currentStep.value?.id } })
+  }
+}
+
+function findNextStep(action: "next" | "previous"){
+  let findIndex = lyric.value.steps.findIndex(s => s.id === currentStep.value.id);
+  const actionSum = action === "next" ? 1 : -1;
+  const changedStep = lyric.value.steps[findIndex + actionSum];
+
+  if(findIndex !== -1 && changedStep){
+    return changedStep;
+  }else{
+    return undefined;
+  }
+}
+
+async function start() {
+  play();
+  const startIndex = lyric.value?.steps.findIndex(s => s.id === currentStep.value?.id) ?? 0;
+  const playConfig = lyric.value?.steps.filter((_, i) => i >= startIndex);
+
+  for (const stepConfig of playConfig) {
+    if(player.value === "play"){
+      const timeout = stepConfig.time * 1000;
+      const incrementSizeBar = (1/stepConfig.time) * 100;
+      
+      currentStep.value = stepConfig;
+
+      await new Promise<void>((resolve) => {
+        const interval = setInterval(() => {
+          if(timeCount.value >= timeout){
+            sizeBar.value = 0;
+            timeCount.value = 0;
+            clearInterval(interval);
+            resolve();
+          }else if(player.value === "play"){
+            sizeBar.value < 100 && (sizeBar.value += incrementSizeBar);
+            timeCount.value += 1000;
+          }else{
+            clearInterval(interval);
+          }
+        }, 1000);
+      });
+    }else{
+      break;
     }
   }
+}
 
-  async function start() {
-    play();
-    const startIndex = lyric.value?.steps.findIndex(s => s.id === currentStep.value?.id) ?? 0;
-    const playConfig = lyric.value?.steps.filter((_, i) => i >= startIndex);
+onMounted(() => {
+  currentPart.value = Number(route.query.part) ?? 0;
 
-    for (const stepConfig of playConfig) {
-      if(player.value === "play"){
-        const timeout = stepConfig.time * 1000;
-        const incrementSizeBar = (1/stepConfig.time) * 100;
-        
-        currentStep.value = stepConfig;
-  
-        await new Promise<void>((resolve) => {
-          const interval = setInterval(() => {
-            if(timeCount.value >= timeout){
-              sizeBar.value = 0;
-              timeCount.value = 0;
-              clearInterval(interval);
-              resolve();
-            }else if(player.value === "play"){
-              sizeBar.value < 100 && (sizeBar.value += incrementSizeBar);
-              timeCount.value += 1000;
-            }else{
-              clearInterval(interval);
-            }
-          }, 1000);
-        });
-      }else{
-        break;
+  const findLyric = context.$lyrics.value.find(lyric => lyric.id === route?.params?.id)
+
+  if(findLyric) {
+    lyric.value = findLyric;
+
+    if(currentPart.value){
+      const findStep = lyric?.value?.steps.find(s => s.id === currentPart.value);
+
+      if(findStep){
+        currentStep.value = findStep;
+        return;
       }
     }
-  }
+      
+    currentStep.value = lyric.value?.steps[0];
+  }else{
+    notFound.value = true;
+  };
 
-  onMounted(() => {
-    currentPart.value = Number(route.query.part) ?? 0;
-
-    api.fetch(route?.params?.id as string)
-      .then(res => {
-        lyric.value = res.data;
-
-        if(currentPart.value){
-          const findStep = lyric.value.steps.find(s => s.id === currentPart.value);
-
-          if(findStep){
-            currentStep.value = findStep;
-            return;
-          }
-        }
-          
-        currentStep.value = lyric.value.steps[0];
-      });
-
-      document.addEventListener('keydown', keydown);
-  });
+  document.addEventListener('keydown', keydown);
+});
 </script>
 
 <style scoped>
