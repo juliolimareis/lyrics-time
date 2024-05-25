@@ -5,7 +5,6 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
-    "db": "bun json-server db.json -p 3045",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
@@ -36,7 +35,6 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-vue": "^9.26.0",
     "globals": "^15.2.0",
-    "json-server": "^1.0.0-beta.0",
     "typescript-eslint": "^7.9.0",
     "vue-eslint-parser": "^9.3.0"
   }
