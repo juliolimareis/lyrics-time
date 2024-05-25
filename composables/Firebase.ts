@@ -1,4 +1,5 @@
-import { collection, getDocs, query, orderBy, addDoc, setDoc, doc, getDoc, } from "firebase/firestore";
+import type { User } from "firebase/auth";
+import { collection, getDocs, query, orderBy, addDoc, setDoc, doc, getDoc, serverTimestamp, } from "firebase/firestore";
 
 export class Firebase {
   db = useFirebase().db;
@@ -30,17 +31,19 @@ export class Firebase {
   async addLyric(lyric: Lyric) {
     const lyricsRef = collection(this.db, "lyrics");
 
-    addDoc(lyricsRef, lyric);
+    const docRef = await addDoc(lyricsRef, lyric);
+
+    return docRef.id;
   }
 
-  async setLyric(lyric: Lyric) {
+  async setLyric(lyric: Lyric, user: User) {
     const lyricsRef = collection(this.db, "lyrics");
 
     if (lyric.id) {
       const toUpdate = { ...lyric };
 
       delete toUpdate.id;
-      await setDoc(doc(lyricsRef, lyric.id), toUpdate, { merge: true });
+      await setDoc(doc(lyricsRef, lyric.id), { ...toUpdate, createdAt: serverTimestamp(), createdBy: { id: user.uid, email: user.email, name: user.displayName } }, { merge: true });
     }
   }
 

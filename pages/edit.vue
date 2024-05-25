@@ -136,15 +136,15 @@ function remove(index: number){
 }
 
 async function onSave(){
-  if(lyricId.value){
-    await firebase.setLyric(lyric.value);
+  if(lyricId.value && context.$user.value){
+    await firebase.setLyric(lyric.value, context.$user.value);
     const index = context.$lyrics.value.findIndex(l => l.id === lyric.value.id);
 
     if(index !== -1){
       context.$lyrics.value.splice(index, 1);
     }
-  }else{
-    await firebase.addLyric(lyric.value);
+  }else if(!lyricId.value && context.$user.value){
+    lyricId.value = await firebase.addLyric(lyric.value);
   }
 
   context.$lyrics.value.push(lyric.value);
