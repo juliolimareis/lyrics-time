@@ -2,6 +2,7 @@ export interface Lyric {
   id?: string;
   title: string;
   artist: string;
+  youtube?: string;
   steps: Step[];
 }
 

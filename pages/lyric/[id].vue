@@ -85,8 +85,12 @@
       <div class="text-center w-fit m-auto mt-5 px-5">
         <p class="mb-5 text-justify text-2xl racking-wide" v-html="currentStep?.html"/>
       </div>
-    </template>
 
+      <div v-if="youtube" class="m-auto w-full h-auto max-w-full md:w-96 md:h-52 border border-gray-200 rounded-lg dark:border-gray-700">
+        <iframe @click="playOrPause" class="w-full h-full" :src="`https://www.youtube.com/embed/${youtube}`" />
+      </div>
+    </template>
+    
     <template v-else>
       <p>Carregando ...</p>
     </template>
@@ -110,6 +114,7 @@ const player = ref<"play" | "pause">("pause");
 const timeCount = ref(0);
 const notFound = ref(false);
 const lyric = ref<Lyric>();
+const youtube = ref("");
 
 function pause(){
   player.value = "pause";
@@ -194,6 +199,14 @@ async function start() {
   }
 }
 
+function playOrPause(){
+  if(player.value === "pause"){
+    play();
+  }else{
+    stop();
+  }
+}
+
 onMounted(() => {
   currentPart.value = Number(route.query.part) ?? 0;
 
@@ -201,6 +214,7 @@ onMounted(() => {
 
   if(findLyric) {
     lyric.value = findLyric;
+    youtube.value = lyric.value?.youtube?.split('/watch')[1]?.split('?v=')[1] ?? "";
     useHead({ title: "Playing - " + lyric.value.title });
 
     if(currentPart.value){

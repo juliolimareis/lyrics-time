@@ -61,42 +61,74 @@
         />
       </div>
 
-      <template v-for="(setup, i) in lyric.steps" :key="setup.id">
-        <div class="mb-5 grid grid-cols-12">
-          <div class="col-span-11">
-            <label
-              for="base-input"
-              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Time
-            </label>
-            <input
-              type="number"
-              pattern="[0-9]*"
-              inputmode="numeric"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-              v-model="setup.time"
-            />
-          </div>
+      <div class="mb-5">
+        <label
+          for="base-input"
+          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        >
+          Youtube
+        </label>
+        <input
+          type="url"
+          placeholder="artist name"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+          v-model="lyric.youtube"
+        />
+      </div>
 
-          <div class="col-span-1">
-            <button @click="remove(i)" class="text-white mt-8 ml-4  focus:outline-none focus:ring-2 focus:ring-opacity-75">
-              <TrashIcon class="w-4 h-4 text-red-400"/>
-            </button>
-          </div>
-
-        </div>
-  
-        <div class="mb-5">
-          <label for="large-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Part {{ setup.id }}</label>
-          <textarea
-            class="p-2 block w-full text-gray-900 border border-green-300 rounded-lg bg-gray-50 text-base focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-green-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
-            v-model="setup.html" placeholder="lyrics HTML here..."
-            rows="5"
-          />
-          <div class="p-2 bg-black text-justify text-white border-[1px] mt-2 rounded border-gray-400 min-h-10" v-html="setup.html" />
+      <template v-if="!lyric.steps.length">
+        <label for="large-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Lyric</label>
+        <textarea
+          class="p-2 block w-full text-gray-900 border border-green-300 rounded-lg bg-gray-50 text-base focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-green-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
+          v-model="lyricText" placeholder="lyrics here..."
+          rows="5"
+        />
+        
+        <div class="p-2 text-center min-h-10">
+          <Button @click="splitLyric">Split</Button>
         </div>
       </template>
+
+      <template v-else>
+        <div v-for="(setup, i) in lyric.steps" :key="setup.id">
+          <div class="mb-5 grid grid-cols-12">
+            <div class="col-span-11">
+              <label
+                for="base-input"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Time
+              </label>
+              <input
+                type="number"
+                pattern="[0-9]*"
+                inputmode="numeric"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                v-model="setup.time"
+              />
+            </div>
+  
+            <div class="col-span-1">
+              <button @click="remove(i)" class="text-white mt-8 ml-4  focus:outline-none focus:ring-2 focus:ring-opacity-75">
+                <TrashIcon class="w-4 h-4 text-red-400"/>
+              </button>
+            </div>
+  
+          </div>
+    
+          <div class="mb-5">
+            <label for="large-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Part {{ setup.id }}</label>
+            <textarea
+              class="p-2 block w-full text-gray-900 border border-green-300 rounded-lg bg-gray-50 text-base focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-green-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-green-500 dark:focus:border-green-500"
+              v-model="setup.html" placeholder="lyrics HTML here..."
+              rows="5"
+            />
+            <div class="p-2 bg-black text-justify text-white border-[1px] mt-2 rounded border-gray-400 min-h-10" v-html="setup.html" />
+          </div>
+        </div>
+
+      </template>
+
     </div>
   </div>
 </template>
@@ -110,18 +142,28 @@ const route = useRoute();
 
 const context = useNuxtApp();
 const lyricId = ref<string>();
+const lyricText = ref("");
 const api = useLyric();
 const notFound = ref(false);
 const firebase = new Firebase();
 const lyric = ref<Lyric>({
   title: "",
   artist: "",
-  steps: [{
-    id: 1,
-    html: "",
-    time: 20
-  }]
+  youtube: "",
+  steps: []
 });
+
+function splitLyric(){
+  const paragraph = lyricText.value.trim().split('\n\n')
+    .map((paragraph: string) => paragraph);
+
+  lyric.value.steps = paragraph.map<Step>((paragraph: string, id: number) =>
+    ({
+      id,
+      time: 20,
+      html: paragraph.split("\n").map((line: string) => `${line}<br>`).join("\n"),
+    }));
+}
 
 function add(){
   lyric.value.steps.push({
@@ -147,7 +189,7 @@ async function onSave(){
     lyricId.value = await firebase.addLyric(lyric.value);
   }
 
-  context.$lyrics.value.push(lyric.value);
+  context.$lyrics.value.push({ ...lyric.value, id: lyricId.value });
 }
 
 onMounted(() => {
