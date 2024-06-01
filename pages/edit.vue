@@ -186,7 +186,7 @@ async function onSave(){
       context.$lyrics.value.splice(index, 1);
     }
   }else if(!lyricId.value && context.$user.value){
-    lyricId.value = await firebase.addLyric(lyric.value);
+    lyricId.value = await firebase.addLyric(lyric.value, context.$user.value);
   }
 
   context.$lyrics.value.push({ ...lyric.value, id: lyricId.value });

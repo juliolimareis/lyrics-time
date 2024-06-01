@@ -28,10 +28,10 @@ export class Firebase {
     return undefined;
   }
 
-  async addLyric(lyric: Lyric) {
+  async addLyric(lyric: Lyric, user: User) {
     const lyricsRef = collection(this.db, "lyrics");
 
-    const docRef = await addDoc(lyricsRef, lyric);
+    const docRef = await addDoc(lyricsRef, { ...lyric, createdAt: serverTimestamp(), createdBy: { id: user.uid, email: user.email, name: user.displayName } });
 
     return docRef.id;
   }
@@ -43,7 +43,7 @@ export class Firebase {
       const toUpdate = { ...lyric };
 
       delete toUpdate.id;
-      await setDoc(doc(lyricsRef, lyric.id), { ...toUpdate, createdAt: serverTimestamp(), createdBy: { id: user.uid, email: user.email, name: user.displayName } }, { merge: true });
+      await setDoc(doc(lyricsRef, lyric.id), { ...toUpdate, updatedAt: serverTimestamp(), editedBy: { id: user.uid, email: user.email, name: user.displayName } }, { merge: true });
     }
   }
 
